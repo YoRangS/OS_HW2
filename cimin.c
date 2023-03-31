@@ -19,28 +19,18 @@ char * arr_slicing(char * arr, int start, int end){
         return slice_arr;
 }
 
-void
+char **
 optionManager(int argc, char ** args)
 {
-        char * file_path ;
-        char * stderr_str ;
-        char * store_RCI ;
+        if (0 /*invaild argument*/) {return NULL;}
+        
+        char ** return_str = (char**) malloc(sizeof(char*) * (argc-4));
+        int index = 0;
         for (int i=1; i<argc; i++) {
-                if (args[i][0] == '-') {
-                        if (args[i][1] == 'i') {
-                                // printf("File path of the crashing Input : %s\n",args[i+1]);
-                                file_path = args[i+1] ;
-                        } else if (args[i][1] == 'm') {
-                                // printf("standard error String : %s\n",args[i+1]);
-                                stderr_str = args[i+1] ;
-                        } else if (args[i][1] == 'o') {
-                                // printf("File path to store the RCI : %s\n",args[i+1]);
-                                store_RCI = args[i+1] ;
-                        } else { printf("Invaild option\n"); }
-                }
-                if (i == argc - 1) {
-                    // save file name (p)
-                }
+                if (i==1 || i==3 || i==5) continue;
+                return_str[index] = (char*) malloc(sizeof(char) * strlen(args[i]));
+                strcpy(return_str, args[i]);
+                index++;
         }
 }
 
@@ -95,7 +85,14 @@ reduce(char * tm) {
 int
 main(int argc, char ** args)
 {
-        optionManager(argc, args);
+        char ** information = optionManager(argc, args);
+        if (information == NULL) exit(0);
+        /*
+        information[0] = file path of the crashing input
+        information[1] = standard error determines..
+        information[2] = file path to store RCI
+        information[3..] = target program (+own argument)
+        */
 
         pid_t child_pid ;
         int exit_code ;
