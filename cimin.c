@@ -92,6 +92,7 @@ main(int argc, char ** args)
         information[1] = standard error determines..
         information[2] = file path to store RCI
         information[3..] = target program (+own argument)
+
         */
 
         pid_t child_pid ;
