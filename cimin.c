@@ -10,17 +10,32 @@
 
 int pipes[2];
 
+char * arr_slicing(char * arr, int start, int end){
+        int arr_size = end - start;
+        char * slice_arr  = (char *)malloc(sizeof(char) * arr_size);
+        for(int i = 0; i < arr_size; i++){
+                slice_arr[i] = arr[start + i];
+        }
+        return slice_arr;
+}
+
 void
 optionManager(int argc, char ** args)
 {
+        char * file_path ;
+        char * stderr_str ;
+        char * store_RCI ;
         for (int i=1; i<argc; i++) {
                 if (args[i][0] == '-') {
                         if (args[i][1] == 'i') {
-                                printf("File path of the crashing Input : %s\n",args[i+1]);
+                                // printf("File path of the crashing Input : %s\n",args[i+1]);
+                                file_path = args[i+1] ;
                         } else if (args[i][1] == 'm') {
-                                printf("standard error String : %s\n",args[i+1]);
+                                // printf("standard error String : %s\n",args[i+1]);
+                                stderr_str = args[i+1] ;
                         } else if (args[i][1] == 'o') {
-                                printf("File path to store the RCI : %s\n",args[i+1]);
+                                // printf("File path to store the RCI : %s\n",args[i+1]);
+                                store_RCI = args[i+1] ;
                         } else { printf("Invaild option\n"); }
                 }
                 if (i == argc - 1) {
@@ -57,15 +72,16 @@ reduce(char * tm) {
 
         while (s > 0) {
                 for (int i=0; i<strlen(tm)-s-1; i++) {
-                    // head <- tm[0..i]
-                    // tail <= tm[i+s+1..|tm|-1]
+                        char * head = arr_slicing(tm, 0, i+1);
+                        char * tail = arr_slicing(tm, i+s+1, strlen(tm));
                     // o <= p(head + tail)     use exec()
                     // if (o satisfies with c) {
                     //     return reduce(head+tail)
                     // }
+
                 }
                 for (int i=0; i<strlen(tm)-s-1; i++) {
-                    // mid <- tm[i..i+s]
+                        char * mid = arr_slicing(tm, i, i+s+1);
                     // o <= p(mid)     use exec()
                     // if (o satisfies with c) {
                     //     return reduce(mid)
