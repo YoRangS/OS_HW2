@@ -9,6 +9,7 @@
 // #include <sys/wait.h>
 
 int pipes[2];
+char ** return_str;
 
 char * arr_slicing(char * arr, int start, int end){
         int arr_size = end - start;
@@ -19,19 +20,34 @@ char * arr_slicing(char * arr, int start, int end){
         return slice_arr;
 }
 
-char **
+void
 optionManager(int argc, char ** args)
 {
-        if (0 /*invaild argument*/) {return NULL;}
-        
-        char ** return_str = (char**) malloc(sizeof(char*) * (argc-4));
-        int index = 0;
+        if (0 /*invaild argument*/) {/*perror*/}
+
         for (int i=1; i<argc; i++) {
-                if (i==1 || i==3 || i==5) continue;
-                return_str[index] = (char*) malloc(sizeof(char) * strlen(args[i]));
-                strcpy(return_str, args[i]);
-                index++;
+                if (args[i] == "-i") {
+                        memcpy(return_str[0], args[i+1], sizeof(args[i+1]));
+                } else if (args[i] == "-m") {
+                        memcpy(return_str[1], args[i+1], sizeof(args[i+1]));
+                } else if (args[i] == "-o") {
+                        memcpy(return_str[2], args[i+1], sizeof(args[i+1]));
+                } else if (args[i] == "./a.out") {
+                        memcpy(return_str[3], args[i], sizeof(args[i]));
+                        for(int j=i+1; j<argc; j++) {
+                                memcpy(return_str[4+(j-i-1)], args[j], sizeof(args[i]));
+                        }
+                }
         }
+        
+        // return_str = (char**) malloc(sizeof(char*) * (argc-4));
+        // int index = 0;
+        // for (int i=1; i<argc; i++) {
+        //         if (i==1 || i==3 || i==5) continue;
+        //         return_str[index] = (char*) malloc(sizeof(char) * strlen(args[i]));
+        //         strcpy(return_str, args[i]);
+        //         index++;
+        // }
 }
 
 void
@@ -55,61 +71,73 @@ parent_proc()
         }
 }
 
+/*
+
+*/
+
 char * 
 reduce(char * tm) {
         // tm <- t
         int s = strlen(tm) - 1 ;
 
         while (s > 0) {
-                for (int i=0; i<strlen(tm)-s-1; i++) {
-                        char * head = arr_slicing(tm, 0, i+1);
-                        char * tail = arr_slicing(tm, i+s+1, strlen(tm));
-                    // o <= p(head + tail)     use exec()
-                    // if (o satisfies with c) {
-                    //     return reduce(head+tail)
-                    // }
+                for (int i=0; i<strlen(tm)-s; i++) {
+                        char * head = arr_slicing(tm, 0, i);
+                        char * tail = arr_slicing(tm, i+s, strlen(tm));
+                        // o <= p(head + tail)     use exec()
+                        pid_t child_pid ;
+                        int exit_code ;
+
+                        if ((pipe(pipes)) != 0) {
+                                perror("Error");
+                                exit(1);
+                        }
+
+                        if (child_pid = fork()) {
+                                parent_proc();
+                        }
+                        else {
+                                child_proc();
+                        }
+                        wait(&exit_code);
+                        // if (o satisfies with c) {
+                        //     return reduce(head+tail)
+                        // }
 
                 }
                 for (int i=0; i<strlen(tm)-s-1; i++) {
-                        char * mid = arr_slicing(tm, i, i+s+1);
-                    // o <= p(mid)     use exec()
-                    // if (o satisfies with c) {
-                    //     return reduce(mid)
-                    // }
+                        char * mid = arr_slicing(tm, i, i+s);
+                        // o <= p(mid)     use exec()
+                        // if (o satisfies with c) {
+                        //     return reduce(mid)
+                        // }
                 }
                 s = s - 1 ;
         }
         return tm ;
 }
 
+void minimize(char * t) {
+        return reduce(t);
+}
+
 int
 main(int argc, char ** args)
 {
-        char ** information = optionManager(argc, args);
-        if (information == NULL) exit(0);
+        return_str = (char**)malloc(argc * sizeof(char*));
+        optionManager(argc, args);
+        for(int i = 0; i < 8; i++) {
+                printf("%s\n", return_str[0]);
+        }
         /*
         information[0] = file path of the crashing input
-        information[1] = standard error determines..
+        information[1] = standard error determines.. (i.e. c)
         information[2] = file path to store RCI
         information[3..] = target program (+own argument)
-
         */
 
-        pid_t child_pid ;
-        int exit_code ;
-
-        if ((pipe(pipes)) != 0) {
-                perror("Error");
-                exit(1);
-        }
-
-        if (child_pid = fork()) {
-                parent_proc();
-        }
-        else {
-                child_proc();
-        }
-        wait(&exit_code);
+        char* t ; // get crashing input from information[0]
+        // minimize(t);
 
         exit(0);
 }
