@@ -27,15 +27,20 @@ optionManager(int argc, char ** args)
 
         for (int i=1; i<argc; i++) {
                 if (args[i] == "-i") {
-                        memcpy(return_str[0], args[i+1], sizeof(args[i+1]));
+                        // memcpy(return_str[0], args[i+1], sizeof(args[i+1]));
+                        return_str[0] = args[i+1];
                 } else if (args[i] == "-m") {
-                        memcpy(return_str[1], args[i+1], sizeof(args[i+1]));
+                        // memcpy(return_str[1], args[i+1], sizeof(args[i+1]));
+                        return_str[1] = args[i+1];
                 } else if (args[i] == "-o") {
-                        memcpy(return_str[2], args[i+1], sizeof(args[i+1]));
+                        // memcpy(return_str[2], args[i+1], sizeof(args[i+1]));
+                        return_str[2] = args[i+1];
                 } else if (args[i] == "./a.out") {
-                        memcpy(return_str[3], args[i], sizeof(args[i]));
+                        // memcpy(return_str[3], args[i], sizeof(args[i]));
+                        return_str[3] = args[i];
                         for(int j=i+1; j<argc; j++) {
-                                memcpy(return_str[4+(j-i-1)], args[j], sizeof(args[i]));
+                                // memcpy(return_str[4+(j-i-1)], args[j], sizeof(args[i]));
+                                return_str[4+(j-i-1)] = args[j];
                         }
                 }
         }
