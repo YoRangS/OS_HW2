@@ -55,7 +55,7 @@ int ProgramExecution(char * testInput) {
                 perror("Failed to read pipe");
                 exit(1);
         }
-        
+
         if (child_pid = fork()) {
                 parent_proc();
         }
@@ -65,7 +65,7 @@ int ProgramExecution(char * testInput) {
         wait(&exit_code);
 }
 
-char * 
+void
 reduce(char * t) {
         char * tm = t;
         int s = strlen(tm) - 1 ;
@@ -74,10 +74,10 @@ reduce(char * t) {
                 for (int i=0; i<strlen(tm)-s; i++) {
                         char * head = (char*)malloc((i+1)*sizeof(char));
                         strncpy(head, tm, i);
-                        head[i] = "\0";
+                        head[i] = '\0';
                         char * tail = (char*)malloc((i+1)*sizeof(char));
                         strncpy(tail, tm+i+s, strlen(tm)-(i+s));
-                        tail[strlen(tm)-(i+s)] = "\0";
+                        tail[strlen(tm)-(i+s)] = '\0';
 
                         int len = snprintf(NULL, 0, "%s%s", head, tail);
                         char * test_input = (char*) malloc(len + 1);
@@ -91,7 +91,7 @@ reduce(char * t) {
                 for (int i=0; i<strlen(tm)-s-1; i++) {
                         char * mid = (char*)malloc((i+1)*sizeof(char));
                         strncpy(mid, tm+i, s);
-                        mid[i] = "\0";
+                        mid[i] = '\0';
 
                         if (ProgramExecution(mid)) {
                                 return reduce(mid);
