@@ -55,7 +55,7 @@ int ProgramExecution(char * testInput) {
                 perror("Failed to read pipe");
                 exit(1);
         }
-
+        
         if (child_pid = fork()) {
                 parent_proc();
         }
@@ -66,8 +66,8 @@ int ProgramExecution(char * testInput) {
 }
 
 char * 
-reduce(char * tm) {
-        // tm <- t
+reduce(char * t) {
+        char * tm = t;
         int s = strlen(tm) - 1 ;
 
         while (s > 0) {
@@ -83,22 +83,19 @@ reduce(char * tm) {
                         char * test_input = (char*) malloc(len + 1);
                         snprintf(test_input, len+1, "%s%s", head, tail);
 
-                        // o <= p(head + tail)     use exec()
                         if (ProgramExecution(test_input)) {
                                 return reduce(test_input);
                         }
-                        
-                        // if (o satisfies with c(args[4])) {
-                        //     return reduce(head+tail)
-                        // }
-
+                        free(head); free(tail); free(test_input);
                 }
                 for (int i=0; i<strlen(tm)-s-1; i++) {
-                        char * mid = arr_slicing(tm, i, i+s);
-                        // o <= p(mid)     use exec()
-                        // if (o satisfies with c) {
-                        //     return reduce(mid)
-                        // }
+                        char * mid = (char*)malloc((i+1)*sizeof(char));
+                        strncpy(mid, tm+i, s);
+                        mid[i] = "\0";
+
+                        if (ProgramExecution(mid)) {
+                                return reduce(mid);
+                        }
                 }
                 s = s - 1 ;
         }
