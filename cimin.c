@@ -65,7 +65,7 @@ int ProgramExecution(char * testInput) {
         wait(&exit_code);
 }
 
-void
+char *
 reduce(char * t) {
         char * tm = t;
         int s = strlen(tm) - 1 ;
@@ -102,8 +102,19 @@ reduce(char * t) {
         return tm ;
 }
 
-void minimize(char * t) {
+char* minimize(char * t) {
         return reduce(t);
+}
+
+void create_reduced(char* t){
+        FILE* file = popen("reduced", "w");
+        if (file == NULL) {
+                perror("Failed to write");
+                exit(0);
+        }
+
+        fprintf(file, t);
+        pclose(file);
 }
 
 int
@@ -145,7 +156,7 @@ main(int argc, char ** args)
 
         pclose(fp);
 
-        minimize(buff);
+        create_reduced(minimize(buff));
 
         free(return_str);
 
