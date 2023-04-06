@@ -32,16 +32,16 @@ optionManager(int argc, char ** args)
         }
 
         for (int i=1; i<argc; i++) {
-                if (strcmp(args[i], "-i")) {
+                if (strcmp(args[i], "-i") == 0) {
                         // memcpy(return_str[0], args[i+1], sizeof(args[i+1]));
                         return_str[0] = args[i+1];
-                } else if (strcmp(args[i], "-m")) {
+                } else if (strcmp(args[i], "-m") == 0) {
                         // memcpy(return_str[1], args[i+1], sizeof(args[i+1]));
                         return_str[1] = args[i+1];
-                } else if (strcmp(args[i], "-o")) {
+                } else if (strcmp(args[i], "-o") == 0) {
                         // memcpy(return_str[2], args[i+1], sizeof(args[i+1]));
                         return_str[2] = args[i+1];
-                } else if (strcmp(args[i], "./a.out")) {
+                } else if (strcmp(args[i], "./a.out") == 0) {
                         // memcpy(return_str[3], args[i], sizeof(args[i]));
                         return_str[3] = args[i];
                         for(int j=i+1; j<argc; j++) {
@@ -135,7 +135,7 @@ void minimize(char * t) {
 int
 main(int argc, char ** args)
 {
-        return_str = (char**)malloc(argc * sizeof(char*));
+        // return_str = (char**)malloc(argc * sizeof(char*));
         optionManager(argc, args);
         for(int i = 0; i < 8; i++) {
                 printf("%s\n", return_str[0]);
