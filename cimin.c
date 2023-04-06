@@ -138,7 +138,8 @@ main(int argc, char ** args)
         // return_str = (char**)malloc(argc * sizeof(char*));
         optionManager(argc, args);
         for(int i = 0; i < 8; i++) {
-                printf("%s\n", return_str[0]);
+                if (return_str[i] == NULL) break;
+                printf("%s\n", return_str[i]);
         }
         /*
         information[0] = file path of the crashing input
