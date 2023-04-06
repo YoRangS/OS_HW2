@@ -95,7 +95,12 @@ int
 main(int argc, char ** args)
 {
         return_str = (char**)malloc(argc * sizeof(char*));
-        memcpy(return_str, args, sizeof(args));
+        memcpy(return_str, args, argc * sizeof(char *));
+
+        for (int i = 0; i < argc; i++) {
+                return_str[i] = (char*)malloc(strlen(args[i]) + 1);
+                strcpy(return_str[i], args[i]);
+        }
         
         for (int i = 0; i < argc; i++) {
                 printf("(%d) %s\n", i, return_str[i]);
