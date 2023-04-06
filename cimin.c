@@ -8,42 +8,62 @@
 #include <error.h>
 // #include <sys/wait.h>
 
+#define CRASH_INPUT_SIZE 4096
+
 int pipes[2];
 char ** return_str;
-
-char * arr_slicing(char * arr, int start, int end){
-        int arr_size = end - start;
-        char * slice_arr  = (char *)malloc(sizeof(char) * arr_size);
-        for(int i = 0; i < arr_size; i++){
-                slice_arr[i] = arr[start + i];
-        }
-        return slice_arr;
-}
 
 void
 child_proc()
 {
         dup2(pipes[1], 1) ;
-        //execl("file_path", "args", (char *) 0x0) ;
+        execl("file_path", "args", (char *) 0x0) ;
 }
 
-void
+int
 parent_proc()
 {
-        char buf[32] ;
+        char buf[128] ;
         ssize_t s ;
 
         close(pipes[1]);
 
-        while ((s = read(pipes[0], buf, 31)) > 0) {
+        if ((s = read(pipes[0], buf, 127)) > 0) {
+                perror("Failed to read output");
+        } else {
                 buf[s+1] = 0x0 ;
-                printf("%s/n", buf) ;
         }
+        return strstr(return_str[4], buf) != NULL;
 }
 
 /*
-
+o <- p(head+tail)
+In child, 
+        dup2(stdout);
+        execl("args[2]", head+tail, (char *) 0x0);
+        then stdout receive execl's result and give parent
+In parent,
+        result = receive execl's result
+        return result
 */
+
+int ProgramExecution(char * testInput) {
+        pid_t child_pid ;
+        int exit_code ;
+
+        if ((pipe(pipes)) != 0) {
+                perror("Failed to read pipe");
+                exit(1);
+        }
+
+        if (child_pid = fork()) {
+                parent_proc();
+        }
+        else {
+                child_proc();
+        }
+        wait(&exit_code);
+}
 
 char * 
 reduce(char * tm) {
@@ -52,25 +72,23 @@ reduce(char * tm) {
 
         while (s > 0) {
                 for (int i=0; i<strlen(tm)-s; i++) {
-                        char * head = arr_slicing(tm, 0, i);
-                        char * tail = arr_slicing(tm, i+s, strlen(tm));
+                        char * head = (char*)malloc((i+1)*sizeof(char));
+                        strncpy(head, tm, i);
+                        head[i] = "\0";
+                        char * tail = (char*)malloc((i+1)*sizeof(char));
+                        strncpy(tail, tm+i+s, strlen(tm)-(i+s));
+                        tail[strlen(tm)-(i+s)] = "\0";
+
+                        int len = snprintf(NULL, 0, "%s%s", head, tail);
+                        char * test_input = (char*) malloc(len + 1);
+                        snprintf(test_input, len+1, "%s%s", head, tail);
+
                         // o <= p(head + tail)     use exec()
-                        pid_t child_pid ;
-                        int exit_code ;
-
-                        if ((pipe(pipes)) != 0) {
-                                perror("Error");
-                                exit(1);
+                        if (ProgramExecution(test_input)) {
+                                return reduce(test_input);
                         }
-
-                        if (child_pid = fork()) {
-                                parent_proc();
-                        }
-                        else {
-                                child_proc();
-                        }
-                        wait(&exit_code);
-                        // if (o satisfies with c) {
+                        
+                        // if (o satisfies with c(args[4])) {
                         //     return reduce(head+tail)
                         // }
 
@@ -106,15 +124,40 @@ main(int argc, char ** args)
                 printf("(%d) %s\n", i, return_str[i]);
         }
 
-        /*
-        information[0] = file path of the crashing input
-        information[1] = standard error determines.. (i.e. c)
-        information[2] = file path to store RCI
-        information[3..] = target program (+own argument)
-        */
+        char* file_path = "../OperatingSystem";
+        char* program_path;
+        if(strcmp(args[7], "balance") == 0) {
+                program_path = "/balance/testcases/fail";
+        } else if(strcmp(args[7], "jsondump") == 0) {
+                program_path = "/jsmn/testcases/crash.json";
+        } else if(strcmp(args[7], "xmllint") == 0) {
+                program_path = "/libxml2/testcases/crash.xml";
+        } else if(strcmp(args[7], "test_pngfix") == 0) {
+                program_path = "/libpng/crash.png";
+        }
+        strcat(file_path, program_path);
 
-        char* t ; // get crashing input from information[0]
-        // minimize(t);
+        char buff[CRASH_INPUT_SIZE];
+        FILE *fp;
+        fp = popen(file_path, "r");
+        if(NULL == fp) {
+                perror("Failed popen");
+                return -1;
+        }
+        fgets(buff, CRASH_INPUT_SIZE, fp);
+
+        pclose(fp);
+
+        minimize(buff);
+
+        free(return_str);
 
         exit(0);
 }
+
+/*
+        args[2] = file path of the crashing input
+        args[4] = standard error determines.. (i.e. c)
+        args[6] = file path to store RCI
+        args[7..] = target program (+own argument)
+*/
