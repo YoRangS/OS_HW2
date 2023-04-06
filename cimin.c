@@ -21,47 +21,6 @@ char * arr_slicing(char * arr, int start, int end){
 }
 
 void
-optionManager(int argc, char ** args)
-{
-        if (0 /*invaild argument*/) {/*perror*/}
-
-        return_str = (char**) malloc(sizeof(char*) * argc);
-        for (int i = 0; i < argc; i++) {
-                return_str[i] = (char*) malloc(sizeof(char) * 1024);
-                memset(return_str[i], 0, sizeof(char) * 1024);
-        }
-
-        for (int i=1; i<argc; i++) {
-                if (strcmp(args[i], "-i") == 0) {
-                        // memcpy(return_str[0], args[i+1], sizeof(args[i+1]));
-                        return_str[0] = args[i+1];
-                } else if (strcmp(args[i], "-m") == 0) {
-                        // memcpy(return_str[1], args[i+1], sizeof(args[i+1]));
-                        return_str[1] = args[i+1];
-                } else if (strcmp(args[i], "-o") == 0) {
-                        // memcpy(return_str[2], args[i+1], sizeof(args[i+1]));
-                        return_str[2] = args[i+1];
-                } else if (strcmp(args[i], "./a.out") == 0) {
-                        // memcpy(return_str[3], args[i], sizeof(args[i]));
-                        return_str[3] = args[i];
-                        for(int j=i+1; j<argc; j++) {
-                                // memcpy(return_str[4+(j-i-1)], args[j], sizeof(args[i]));
-                                return_str[4+(j-i-1)] = args[j];
-                        }
-                }
-        }
-        
-        // return_str = (char**) malloc(sizeof(char*) * (argc-4));
-        // int index = 0;
-        // for (int i=1; i<argc; i++) {
-        //         if (i==1 || i==3 || i==5) continue;
-        //         return_str[index] = (char*) malloc(sizeof(char) * strlen(args[i]));
-        //         strcpy(return_str, args[i]);
-        //         index++;
-        // }
-}
-
-void
 child_proc()
 {
         dup2(pipes[1], 1) ;
@@ -135,12 +94,13 @@ void minimize(char * t) {
 int
 main(int argc, char ** args)
 {
-        // return_str = (char**)malloc(argc * sizeof(char*));
-        optionManager(argc, args);
-        for(int i = 0; i < 8; i++) {
-                if (return_str[i] == NULL) break;
-                printf("%s\n", return_str[i]);
+        return_str = (char**)malloc(argc * sizeof(char*));
+        memcpy(return_str, args, sizeof(args));
+        
+        for (int i = 0; i < argc; i++) {
+                printf("(%d) %s\n", i, return_str[i]);
         }
+
         /*
         information[0] = file path of the crashing input
         information[1] = standard error determines.. (i.e. c)
