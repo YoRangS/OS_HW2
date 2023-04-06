@@ -25,17 +25,23 @@ optionManager(int argc, char ** args)
 {
         if (0 /*invaild argument*/) {/*perror*/}
 
+        return_str = (char**) malloc(sizeof(char*) * argc);
+        for (int i = 0; i < argc; i++) {
+                return_str[i] = (char*) malloc(sizeof(char) * 1024);
+                memset(return_str[i], 0, sizeof(char) * 1024);
+        }
+
         for (int i=1; i<argc; i++) {
-                if (args[i] == "-i") {
+                if (strcmp(args[i], "-i")) {
                         // memcpy(return_str[0], args[i+1], sizeof(args[i+1]));
                         return_str[0] = args[i+1];
-                } else if (args[i] == "-m") {
+                } else if (strcmp(args[i], "-m")) {
                         // memcpy(return_str[1], args[i+1], sizeof(args[i+1]));
                         return_str[1] = args[i+1];
-                } else if (args[i] == "-o") {
+                } else if (strcmp(args[i], "-o")) {
                         // memcpy(return_str[2], args[i+1], sizeof(args[i+1]));
                         return_str[2] = args[i+1];
-                } else if (args[i] == "./a.out") {
+                } else if (strcmp(args[i], "./a.out")) {
                         // memcpy(return_str[3], args[i], sizeof(args[i]));
                         return_str[3] = args[i];
                         for(int j=i+1; j<argc; j++) {
