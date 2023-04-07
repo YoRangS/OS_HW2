@@ -19,8 +19,12 @@ char ** return_str;
 void
 child_proc()
 {
+        char argument[5][100];
         dup2(pipes[1], 1) ;
-        execl("file_path", "args", (char *) 0x0) ;
+        for (int i = 8; i < argc; i++) {
+                strcpy(argument[i-8], return_str[i]);
+        }
+        execl(return_str[2], argument, (char *) 0x0) ;
 }
 
 int parent_proc()
