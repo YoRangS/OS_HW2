@@ -39,6 +39,9 @@ int parent_proc()
         FD_ZERO(&readfds);
         FD_SET(pipes[0], &readfds);
 
+        pid_t child_pid ;
+        int exit_code ;
+
         // Set timeout to use select function
         int ret = select(pipes[0] + 1, &readfds, NULL, NULL, &tv);
         if (ret == -1) {
