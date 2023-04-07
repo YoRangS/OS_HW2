@@ -6,9 +6,12 @@
 #include <sys/time.h>
 #include <string.h>
 #include <error.h>
-// #include <sys/wait.h>
+#include <sys/wait.h>
+#include <signal.h>
 
 #define CRASH_INPUT_SIZE 4096
+#define TIMEOUT_SEC 3
+
 
 int pipes[2];
 char ** return_str;
@@ -20,20 +23,40 @@ child_proc()
         execl("file_path", "args", (char *) 0x0) ;
 }
 
-int
-parent_proc()
+int parent_proc()
 {
         char buf[128] ;
         ssize_t s ;
 
         close(pipes[1]);
 
-        if ((s = read(pipes[0], buf, 127)) > 0) {
-                perror("Failed to read output");
-        } else {
-                buf[s+1] = 0x0 ;
+        // timeout
+        struct timeval tv;
+        tv.tv_sec = TIMEOUT_SEC;
+        tv.tv_usec = 0;
+
+        fd_set readfds;
+        FD_ZERO(&readfds);
+        FD_SET(pipes[0], &readfds);
+
+        // select함수 사용해서 timeout설정
+        int ret = select(pipes[0] + 1, &readfds, NULL, NULL, &tv);
+        if (ret == -1) {
+            perror("select() failed");
+            exit(1);
+        } else if (ret == 0) {  // timeout
+            printf("Execution timed out\n");
+            kill(child_pid, SIGTERM);  // Kill child process
+            wait(&exit_code);
+            exit(1);
+        } else {  
+            if ((s = read(pipes[0], buf, 127)) > 0) {
+                    perror("Failed to read output");
+            } else {
+                    buf[s+1] = 0x0 ;
+            }
+            return strstr(return_str[4], buf) != NULL;
         }
-        return strstr(return_str[4], buf) != NULL;
 }
 
 int ProgramExecution(char * testInput) {
