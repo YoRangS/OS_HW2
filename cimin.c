@@ -36,17 +36,6 @@ parent_proc()
         return strstr(return_str[4], buf) != NULL;
 }
 
-/*
-o <- p(head+tail)
-In child, 
-        dup2(stdout);
-        execl("args[2]", head+tail, (char *) 0x0);
-        then stdout receive execl's result and give parent
-In parent,
-        result = receive execl's result
-        return result
-*/
-
 int ProgramExecution(char * testInput) {
         pid_t child_pid ;
         int exit_code ;
@@ -107,19 +96,35 @@ char* minimize(char * t) {
 }
 
 void create_reduced(char* t){
-        FILE* file = popen("reduced", "w");
+        FILE* file = popen(return_str[6], "w");
         if (file == NULL) {
                 perror("Failed to write");
                 exit(0);
         }
 
-        fprintf(file, t);
+        fprintf(file, "%s", t);
         pclose(file);
+}
+
+int checkInvaildArgument(int argc, char ** args) {
+        int check[3] = {0,};
+        for(int i = 0; i < argc; i++) {
+                char* option = args[i];
+                if(i < 6 && i % 2 == 1) {
+                        if(strcmp(option, "-i") == 0) check[0] = 1;
+                        else if(strcmp(option, "-m") == 0) check[1] = 1;
+                        else if(strcmp(option, "-o") == 0) check[2] = 1;
+                }
+        }
+        if (check[0] == 1 && check[1] == 1 && check[2] == 1) return 1;
+        else return 0;
 }
 
 int
 main(int argc, char ** args)
 {
+        if(!checkInvaildArgument(argc, args)) perror("Invaild Argument");
+
         return_str = (char**)malloc(argc * sizeof(char*));
         memcpy(return_str, args, argc * sizeof(char *));
 
@@ -147,7 +152,7 @@ main(int argc, char ** args)
 
         char buff[CRASH_INPUT_SIZE];
         FILE *fp;
-        fp = popen(file_path, "r");
+        fp = popen(args[2], "r");
         if(NULL == fp) {
                 perror("Failed popen");
                 return -1;
@@ -162,10 +167,3 @@ main(int argc, char ** args)
 
         exit(0);
 }
-
-/*
-        args[2] = file path of the crashing input
-        args[4] = standard error determines.. (i.e. c)
-        args[6] = file path to store RCI
-        args[7..] = target program (+own argument)
-*/
