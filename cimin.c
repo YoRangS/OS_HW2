@@ -39,7 +39,7 @@ int parent_proc()
         FD_ZERO(&readfds);
         FD_SET(pipes[0], &readfds);
 
-        // select함수 사용해서 timeout설정
+        // Set timeout to use select function
         int ret = select(pipes[0] + 1, &readfds, NULL, NULL, &tv);
         if (ret == -1) {
             perror("select() failed");
@@ -162,19 +162,6 @@ main(int argc, char ** args)
         for (int i = 0; i < argc; i++) {
                 printf("(%d) %s\n", i, return_str[i]);
         }
-
-        char* file_path = "../OperatingSystem";
-        char* program_path;
-        if(strcmp(args[7], "balance") == 0) {
-                program_path = "/balance/testcases/fail";
-        } else if(strcmp(args[7], "jsondump") == 0) {
-                program_path = "/jsmn/testcases/crash.json";
-        } else if(strcmp(args[7], "xmllint") == 0) {
-                program_path = "/libxml2/testcases/crash.xml";
-        } else if(strcmp(args[7], "test_pngfix") == 0) {
-                program_path = "/libpng/crash.png";
-        }
-        strcat(file_path, program_path);
 
         char buff[CRASH_INPUT_SIZE];
         FILE *fp;
