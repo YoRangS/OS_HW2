@@ -123,7 +123,10 @@ int checkInvaildArgument(int argc, char ** args) {
 int
 main(int argc, char ** args)
 {
-        if(!checkInvaildArgument(argc, args)) perror("Invaild Argument");
+        if(!checkInvaildArgument(argc, args)) {
+                perror("Invaild Argument");
+                exit(0);
+        }
 
         return_str = (char**)malloc(argc * sizeof(char*));
         memcpy(return_str, args, argc * sizeof(char *));
