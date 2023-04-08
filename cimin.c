@@ -182,14 +182,14 @@ main(int argc, char ** args)
 
         char buff[CRASH_INPUT_SIZE];
         FILE *fp;
-        fp = popen(args[2], "r");
+        fp = fopen(args[2], "r");
         if(NULL == fp) {
                 perror("Failed popen");
                 return -1;
         }
         fgets(buff, CRASH_INPUT_SIZE, fp);
 
-        pclose(fp);
+        fclose(fp);
 
         printf("buff : %s", buff);
 
