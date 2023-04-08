@@ -51,7 +51,7 @@ int parent_proc()
 
         // Set timeout to use select function
         int ret = select(pipes[0] + 1, &readfds, NULL, NULL, &tv);
-        printf("")
+        printf("ret : %d\n", ret);
         if (ret == -1) {
             perror("select() failed");
             exit(1);
