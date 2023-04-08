@@ -27,7 +27,7 @@ child_proc()
                 strcpy(argument[i-8], return_str[i]);
         }
 
-        execlp(return_str[2], argument, (char *) 0x0) ;
+        execv(return_str[2], argument, (char *) 0x0) ;
 }
 
 int parent_proc()
