@@ -17,15 +17,16 @@ char ** return_str;
 int return_argc;
 
 void
-child_proc()
+child_proc(char* testInput)
 {
-        char** argument = (char**)malloc((return_argc - 8) * sizeof(char*));
+        char** argument = (char**)malloc((return_argc - 8 + 1) * sizeof(char*));
         dup2(pipes[1], 1) ;
 
         for (int i = 8; i < return_argc; i++) {
                 argument[i] = (char*)malloc(strlen(return_str[i]) + 1);
                 strcpy(argument[i-8], return_str[i]);
         }
+        strcpy(argument[return_argc-8], testInput)
 
         execv(return_str[7], argument) ;
 }
@@ -87,7 +88,7 @@ int ProgramExecution(char * testInput) {
                 result = parent_proc();
         }
         else {
-                child_proc();
+                child_proc(testInput);
         }
         wait(&exit_code);
         printf("result : %d\n", result);
