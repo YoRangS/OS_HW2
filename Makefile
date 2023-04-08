@@ -5,7 +5,6 @@ OBJS=b_reduced j_reduced lx_reduced
 CRASH_INPUT?=balance/testcases/fail
 DET_STRING?="Unbalanced"
 EXE?=$(FILEPATH)balance/balance
-ARGU?=""
 FILEPATH=../OperatingSystem/
 
 all: $(TARGET)
@@ -19,7 +18,7 @@ cimin.o: cimin.c
 Balance: $(TARGET)
 	cd $(FILEPATH)balance && ./build.sh
 	chmod +x $(FILEPATH)$(CRASH_INPUT)
-	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o b_reduced $(EXE) $(ARGU)
+	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o b_reduced $(EXE)
 
 Jsmn: $(TARGET)
 	cd $(FILEPATH)jsmn && ./build.sh
@@ -29,7 +28,7 @@ Jsmn: $(TARGET)
 	chmod +x $(FILEPATH)$(CRASH_INPUT)
 	$(eval DET_STRING := "heap-buffer-overflow")
 	$(eval EXE := $(FILEPATH)jsmn/jsondump)
-	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o j_reduced $(EXE) $(ARGU)
+	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o j_reduced $(EXE)
 
 Libxml2: $(TARGET)
 	cd $(FILEPATH)libxml2 && ./build.sh
@@ -37,8 +36,7 @@ Libxml2: $(TARGET)
 	chmod +x $(FILEPATH)$(CRASH_INPUT)
 	$(eval DET_STRING := "SEGV on unknown address")
 	$(eval EXE := $(FILEPATH)libxml2/xmllint)
-	$(eval ARGU := "--recover --postvalid -")
-	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o lx_reduced $(EXE) $(ARGU)
+	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o lx_reduced $(EXE) --recover --postvalid -
 
 clean:
 	rm -rf $(OBJS) $(TARGET) *.o
