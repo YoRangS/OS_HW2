@@ -95,7 +95,7 @@ int parent_proc()
                     buf[s+1] = 0x0 ;
             }
             printf("buf : %s\n", buf);
-            return strstr(return_str[4], buf) != NULL;
+            return strstr(buf, return_str[4]);
         }
 }
 
