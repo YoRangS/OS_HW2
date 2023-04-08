@@ -38,6 +38,22 @@ child_proc(char* testInput)
         execv(return_str[7], argument) ;
 }
 
+void whatisargument(char* testInput) {
+        char** argument = (char**)malloc((return_argc - 8 + 2) * sizeof(char*));
+        for (int i = 8; i < return_argc; i++) {
+                argument[i] = (char*)malloc(strlen(return_str[i]) + 1);
+                strcpy(argument[i-8], return_str[i]);
+        }
+        strcpy(argument[return_argc-8], "<");
+        strcpy(argument[return_argc-7], testInput);
+
+        printf("argument:\n");
+        for (int i = 0; i < return_argc-8+2; i++) {
+                printf("%s\n", argument[i]);
+        }
+        printf("\n");
+}
+
 int parent_proc()
 {
         char buf[128] ;
@@ -121,6 +137,7 @@ reduce(char * t) {
                         snprintf(test_input, len+1, "%s%s", head, tail);
 
                         printf("test_input : %s\n", test_input);
+                        whatisargument(test_input);
 
                         if (ProgramExecution(test_input)) {
                                 return reduce(test_input);
