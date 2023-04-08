@@ -14,16 +14,17 @@
 
 int pipes[2];
 char ** return_str;
+int return_argc;
 
 void
 child_proc()
 {
         char argument[5][100];
         dup2(pipes[1], 1) ;
-        for (int i = 8; i < argc; i++) {
+        for (int i = 8; i < return_argc; i++) {
                 strcpy(argument[i-8], return_str[i]);
         }
-        execl(return_str[2], argument, (char *) 0x0) ;
+        execlp(return_str[2], argument, (char *) 0x0) ;
 }
 
 int parent_proc()
@@ -161,6 +162,7 @@ main(int argc, char ** args)
 
         return_str = (char**)malloc(argc * sizeof(char*));
         memcpy(return_str, args, argc * sizeof(char *));
+        return_argc = argc;
 
         for (int i = 0; i < argc; i++) {
                 return_str[i] = (char*)malloc(strlen(args[i]) + 1);
