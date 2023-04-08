@@ -45,9 +45,9 @@ void whatisargument(char* testInput) {
                 argu[i-8] = (char*)malloc(strlen(return_str[i]) + 1);
                 strcpy(argu[i-8], return_str[i]);
         }
-        argu[return_argc-8] = (char*)malloc(strlen(return_str[i]) + 1);
+        argu[return_argc-8] = (char*)malloc(strlen("<") + 1);
         strcpy(argu[return_argc-8], "<");
-        argu[return_argc-7] = (char*)malloc(strlen(return_str[i]) + 1);
+        argu[return_argc-7] = (char*)malloc(strlen(testInput) + 1);
         strcpy(argu[return_argc-7], testInput);
 
         printf("argument:\n");
