@@ -24,7 +24,7 @@ Balance: $(TARGET)
 Jsmn: $(TARGET)
 	cd $(FILEPATH)jsmn && ./build.sh
 	$(info CRASH_INPUT value: $(CRASH_INPUT))
-	export CRASH_INPUT=jsmn/testcases/crash.json
+	$(eval CRASH_INPUT := jsmn/testcases/crash.json)
 	$(info CRASH_INPUT value: $(CRASH_INPUT))
 	chmod +x $(FILEPATH)$(CRASH_INPUT)
 	export DET_STRING="heap-buffer-overflow"
@@ -33,7 +33,7 @@ Jsmn: $(TARGET)
 
 Libxml2: $(TARGET)
 	cd $(FILEPATH)libxml2 && ./build.sh
-	export CRASH_INPUT=libxml2/testcases/crash.xml
+	$(eval CRASH_INPUT := libxml2/testcases/crash.xml)
 	chmod +x $(FILEPATH)$(CRASH_INPUT)
 	export DET_STRING="SEGV on unknown address"
 	export EXE=xmllint
