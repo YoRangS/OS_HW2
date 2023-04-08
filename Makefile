@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-c
 TARGET=cimin
-OBJS=jsondump balance xmllint test_pngfix
+OBJS=b_reduced j_reduced lx_reduced
 CRASH_INPUT?=balance/testcases/fail
 DET_STRING?="Unbalanced"
 EXE?=balance
