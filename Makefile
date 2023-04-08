@@ -23,19 +23,21 @@ Balance: $(TARGET)
 
 Jsmn: $(TARGET)
 	cd $(FILEPATH)jsmn && ./build.sh
+	$(info CRASH_INPUT value: $(CRASH_INPUT))
 	export CRASH_INPUT=jsmn/testcases/crash.json
+	$(info CRASH_INPUT value: $(CRASH_INPUT))
 	chmod +x $(FILEPATH)$(CRASH_INPUT)
 	export DET_STRING="heap-buffer-overflow"
 	export EXE=jsondump
 	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o j_reduced $(EXE) $(ARGU)
 
 Libxml2: $(TARGET)
-	cd $(FILEPATH)jsmn && ./build.sh
+	cd $(FILEPATH)libxml2 && ./build.sh
 	export CRASH_INPUT=libxml2/testcases/crash.xml
 	chmod +x $(FILEPATH)$(CRASH_INPUT)
 	export DET_STRING="SEGV on unknown address"
 	export EXE=xmllint
-	ARGU:="--recover --postvalid - < testcases/crash.xml"
+	export ARGU="--recover --postvalid - < testcases/crash.xml"
 	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o lx_reduced $(EXE) $(ARGU)
 
 clean:
