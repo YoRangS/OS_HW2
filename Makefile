@@ -5,7 +5,7 @@ OBJS=b_reduced j_reduced lx_reduced
 CRASH_INPUT?=balance/testcases/fail
 DET_STRING?="Unbalanced"
 EXE?=$(FILEPATH)balance/balance
-ARGU?=<
+ARGU?=""
 FILEPATH=../OperatingSystem/
 
 all: $(TARGET)
@@ -37,7 +37,7 @@ Libxml2: $(TARGET)
 	chmod +x $(FILEPATH)$(CRASH_INPUT)
 	$(eval DET_STRING := "SEGV on unknown address")
 	$(eval EXE := $(FILEPATH)libxml2/xmllint)
-	$(eval ARGU := "--recover --postvalid - < testcases/crash.xml")
+	$(eval ARGU := "--recover --postvalid -")
 	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o lx_reduced $(EXE) $(ARGU)
 
 clean:
