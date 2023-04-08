@@ -17,10 +17,12 @@ cimin.o: cimin.c
 	$(CC) $(CFLAGS) cimin.c
 
 balance_reduced: $(TARGET)
+	cd $(FILEPATH)/balance && ./build.sh
 	chmod +x $(FILEPATH)$(CRASH_INPUT)
 	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o balance_reduced $(EXE) $(ARGU)
 
 jsmn_reduced: $(TARGET)
+	cd $(FILEPATH)/jsmn && ./bulid.sh
 	chmod +x $(FILEPATH)$(CRASH_INPUT)
 	CRASH_INPUT:=jsmn/testcases/crash.json
 	DET_STRING:="heap-buffer-overflow"
@@ -28,6 +30,7 @@ jsmn_reduced: $(TARGET)
 	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o jsmn_reduced $(EXE) $(ARGU)
 
 libxml2_reduced: $(TARGET)
+	cd $(FILEPATH)/jsmn && ./bulid.sh
 	chmod +x $(FILEPATH)$(CRASH_INPUT)
 	CRASH_INPUT:=libxml2/testcases/crash.xml
 	DET_STRING:="SEGV on unknown address"
