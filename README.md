@@ -1,8 +1,21 @@
 # OS_HW2
 
-## [cimin.c](https://github.com/YoRangS/OS_HW2/blob/master/cimin.c)
+# Setting
 
-### #define and global variable
+You must be git clone [test program](https://github.com/hongshin/OperatingSystem/tree/hw2) in this directory   
+Folder/   
+戍式式 OS_HW2/   
+弛  戍式式 cimin.c   
+弛  戍式式 Makefile   
+弛  戌式式 ...   
+戌式式 OperatingSystem/   
+弛  戍式式 Balance   
+弛  戍式式 jsmn   
+弛  戌式式 ...   
+
+# [cimin.c](https://github.com/YoRangS/OS_HW2/blob/master/cimin.c)
+
+## #define and global variable
 ```
 #define CRASH_INPUT_SIZE 4096
 #define TIMEOUT_SEC 3
@@ -15,19 +28,20 @@ Set CRASH_INPUT_SIZE to 4096.
 We set TIMEOUT_SEC to 3 to detect infinite loops when we turn the balance.   
 
 
-### 'void child_proc()'
+## 'void child_proc()'
 creats a child process named child_proc() and passes the output of the child process
 to the parent process through a pipe.
 
 1. A pipe is created to communicate between the parent process and the child process. The pipes array stores the file descriptors of the pipe.
-2. The fork() is called to create a child process. The child process uses the execl() to execute an external program.
-3. The standard output of the child process is redirected to the write and of the pipe(pipes[1]).
-4. The execl() is used to execute the external program lacated at the specified path(file_path).
-5. When the external program execution is complete, the child process terminates. The pipe is automatically closed.
+2. Create file 'testInput' for execute program with parameter "< (file_path of testInput)"
+3. The fork() is called to create a child process. The child process uses the execv() to execute an external program.
+4. The standard output of the child process is redirected to the write and of the pipe(pipes[1]).
+5. The execv() is used to execute the external program located at the specified path(file_path).
+6. When the external program execution is complete, the child process terminates. The pipe is automatically closed.
 
 
 
-### 'int parent_proc()' 
+## 'int parent_proc()' 
 that is used to read the output of a child process.
 It also sets a timeout value and terminates the child process if it exceeds the timeout.
 
@@ -53,7 +67,7 @@ It also sets a timeout value and terminates the child process if it exceeds the 
 
 
 
-### 'int ProgramExecution(char * testInput)'
+## 'int ProgramExecution(char * testInput)'
 exetues an external program with a specified input and returns the result.
 
 1. A pipe is created using the pipe() system call to enable communication between the parent and child processes. The pipes array is used to store the file descriptors for the pipe.
@@ -66,7 +80,7 @@ exetues an external program with a specified input and returns the result.
 
 
 
-### 'char * reduce()'
+## 'char * reduce()'
 takes a string as an argument, cuts out parts of the string to check the result of program execution, and if the program execution result does not satisfy a certain condition, it reassembles the string and repeats the process of checking the program execution result until it finds a satisfying string to return.
 
 1. Save the length of the input string t in s.
@@ -80,12 +94,12 @@ takes a string as an argument, cuts out parts of the string to check the result 
 
 
 
-### 'char * minimize(char * t)'
+## 'char * minimize(char * t)'
 minimizes the given string by calling the reduce() function internally and returns the result of reduce() as its own return value.
 
 
 
-### 'void create_reduced(char * t)'
+## 'void create_reduced(char * t)'
 
 1. Receives a string t as an argument.
 2. Calls the popen function to execute the external program specified by return_str[6]. It returns a FILE pointer connected to the external program using the "w" option.
@@ -94,7 +108,7 @@ minimizes the given string by calling the reduce() function internally and retur
 5. Calls the pclose function to close the connection between the file pointer and the external program.
 
 
-### 'int checkInvaildArgument(int argc, char ** args)'
+## 'int checkInvaildArgument(int argc, char ** args)'
 performs the role of verifying whether all given arguments are valid options. Therefore, it is one of the essential functions to ensure program stability.
 
 1. Receives argc and args array as arguments.
@@ -104,7 +118,7 @@ performs the role of verifying whether all given arguments are valid options. Th
 
 
 
-### 'int main()'
+## 'int main()'
 
 1. Receives arguments argc and args as input.
 2. Calls the checkInvaildArgument function to verify if the arguments are valid options. If an invalid option is found, it prints the error message "Invalid Argument" and exits the program.
@@ -122,9 +136,26 @@ performs the role of verifying whether all given arguments are valid options. Th
 
 
 
-## [Makefile](https://github.com/YoRangS/OS_HW2/blob/master/Makefile)
+# [Makefile](https://github.com/YoRangS/OS_HW2/blob/master/Makefile)
 
-### make all
+## Variables
+
+```
+CC=gcc
+CFLAGS=-c
+TARGET=cimin
+OBJS=b_reduced j_reduced lx_reduced testInput
+CRASH_INPUT?=balance/testcases/fail
+DET_STRING?="Unbalanced"
+EXE?=$(FILEPATH)balance/balance
+FILEPATH=../OperatingSystem/
+```
+CC, CFLAGS, TARGET are for create cimin (execute file)   
+OBJS is for 'make clean'   
+CRASH_INPUT, DET_STRING, EXE are for command-line arguments that receive cimin. It's also initialize for balance
+FILEPATH is for easy to access other directories that has test program
+
+## make all
 
 ```
 all: $(TARGET)
@@ -143,5 +174,33 @@ gcc -c cimin.c
 gcc -o cimin cimin.o
 ```
 
-### make _reduced
+## make Balance, Jsmn, Libxml2
 
+Example jsmn
+
+1. Execute build.sh in program directory
+```
+cd $(FILEPATH)jsmn && ./build.sh
+```
+2. set CRASH_INPUT, DET_STRING, EXE
+```
+$(info CRASH_INPUT value: $(CRASH_INPUT))
+	$(eval CRASH_INPUT := jsmn/testcases/crash.json)
+	$(info CRASH_INPUT value: $(CRASH_INPUT))
+	chmod +x $(FILEPATH)$(CRASH_INPUT)
+	$(eval DET_STRING := "heap-buffer-overflow")
+	$(eval EXE := $(FILEPATH)jsmn/jsondump)
+```
+3. run test program
+```
+./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o j_reduced $(EXE)
+```
+
+## make clean
+
+```
+clean:
+	rm -rf $(OBJS) $(TARGET) *.o
+```
+
+It removes 'cimin, b_reduced, j_reduced, lx_reduced, testInput'
