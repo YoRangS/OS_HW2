@@ -29,6 +29,12 @@ child_proc(char* testInput)
         strcpy(argument[return_argc-8], "<");
         strcpy(argument[return_argc-7], testInput);
 
+        printf("argument:\n");
+        for (int i = 0; i < return_argc-8+2; i++) {
+                printf("%s\n", argument[i]);
+        }
+        printf("\n");
+
         execv(return_str[7], argument) ;
 }
 
