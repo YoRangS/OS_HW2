@@ -4,7 +4,7 @@ TARGET=cimin
 OBJS=b_reduced j_reduced lx_reduced
 CRASH_INPUT?=balance/testcases/fail
 DET_STRING?="Unbalanced"
-EXE?=balance
+EXE?=$(FILEPATH)balance/balance
 ARGU?=""
 FILEPATH=../OperatingSystem/
 
@@ -28,7 +28,7 @@ Jsmn: $(TARGET)
 	$(info CRASH_INPUT value: $(CRASH_INPUT))
 	chmod +x $(FILEPATH)$(CRASH_INPUT)
 	$(eval DET_STRING := "heap-buffer-overflow")
-	$(eval EXE := jsondump)
+	$(eval EXE := $(FILEPATH)jsmn/jsondump)
 	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o j_reduced $(EXE) $(ARGU)
 
 Libxml2: $(TARGET)
@@ -36,7 +36,7 @@ Libxml2: $(TARGET)
 	$(eval CRASH_INPUT := libxml2/testcases/crash.xml)
 	chmod +x $(FILEPATH)$(CRASH_INPUT)
 	$(eval DET_STRING := "SEGV on unknown address")
-	$(eval EXE := xmllint)
+	$(eval EXE := $(FILEPATH)libxml2/xmllint)
 	$(eval ARGU := "--recover --postvalid - < testcases/crash.xml")
 	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o lx_reduced $(EXE) $(ARGU)
 
