@@ -43,26 +43,6 @@ child_proc(char* testInput)
         execv(return_str[7], argument) ;
 }
 
-void whatisargument(char* testInput) {
-        char** argu = (char**)malloc((return_argc - 8 + 2) * sizeof(char*));
-        printf("return_argc: %d\n", return_argc);
-        for (int i = 8; i < return_argc; i++) {
-                argu[i-8] = (char*)malloc(strlen(return_str[i]) + 1);
-                strcpy(argu[i-8], return_str[i]);
-        }
-        argu[return_argc-8] = (char*)malloc(strlen("<") + 1);
-        strcpy(argu[return_argc-8], "<");
-        argu[return_argc-7] = (char*)malloc(strlen(testInput) + 1);
-        strcpy(argu[return_argc-7], testInput);
-
-        printf("argument:\n");
-        for (int i = 0; i < return_argc-8+2; i++) {
-                printf("%s\n", argu[i]);
-        }
-        printf("\n");
-        free(argu);
-}
-
 int parent_proc()
 {
         char buf[128] ;
@@ -84,12 +64,12 @@ int parent_proc()
 
         // Set timeout to use select function
         int ret = select(pipes[0] + 1, &readfds, NULL, NULL, &tv);
-        printf("ret : %d\n", ret);
+        // printf("ret : %d\n", ret);
         if (ret == -1) {
             perror("select() failed");
             exit(1);
         } else if (ret == 0) {  // timeout
-            printf("Execution timed out\n");
+        //     printf("Execution timed out\n");
             kill(child_pid, SIGTERM);  // Kill child process
             wait(&exit_code);
             exit(1);
@@ -99,7 +79,7 @@ int parent_proc()
             } else {
                     buf[s+1] = 0x0 ;
             }
-            printf("buf : %s\n", buf);
+        //     printf("buf : %s\n", buf);
             return strstr(buf, return_str[4]) != NULL;
         }
 }
@@ -109,7 +89,7 @@ int ProgramExecution(char * testInput) {
         int exit_code ;
         int result ;
 
-        printf("ProgramExecution: %s\n", testInput);
+        // printf("ProgramExecution: %s\n", testInput);
 
         if ((pipe(pipes)) != 0) {
                 perror("Failed to read pipe");
@@ -123,7 +103,7 @@ int ProgramExecution(char * testInput) {
                 child_proc(testInput);
         }
         wait(&exit_code);
-        printf("result : %d\n", result);
+        // printf("result : %d\n", result);
         return result;
 }
 
@@ -145,8 +125,7 @@ reduce(char * t) {
                         char * test_input = (char*) malloc(len + 1);
                         snprintf(test_input, len+1, "%s%s", head, tail);
 
-                        printf("test_input : %s\n", test_input);
-                        whatisargument(test_input);
+                        // printf("test_input : %s\n", test_input);
 
                         if (ProgramExecution(test_input)) {
                                 return reduce(test_input);
@@ -158,7 +137,7 @@ reduce(char * t) {
                         strncpy(mid, tm+i, s);
                         mid[i] = '\0';
 
-                        printf("mid : %s\n", mid);
+                        // printf("mid : %s\n", mid);
 
                         if (ProgramExecution(mid)) {
                                 return reduce(mid);
@@ -230,7 +209,7 @@ main(int argc, char ** args)
 
         fclose(fp);
 
-        printf("buff : %s", buff);
+        // printf("buff : %s", buff);
 
         create_reduced(minimize(buff));
 

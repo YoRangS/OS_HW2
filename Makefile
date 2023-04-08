@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-c
 TARGET=cimin
-OBJS=b_reduced j_reduced lx_reduced
+OBJS=b_reduced j_reduced lx_reduced testInput
 CRASH_INPUT?=balance/testcases/fail
 DET_STRING?="Unbalanced"
 EXE?=$(FILEPATH)balance/balance
