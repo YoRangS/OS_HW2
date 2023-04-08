@@ -1,6 +1,21 @@
 # OS_HW2
 
-## 'child_proc()'
+## [cimin.c](https://github.com/YoRangS/OS_HW2/blob/master/cimin.c)
+
+### #define and global variable
+```
+#define CRASH_INPUT_SIZE 4096
+#define TIMEOUT_SEC 3
+
+int pipes[2];
+char ** return_str;
+```
+In this program, we assume that a crashing input does not exceed 4096 bytes   
+Set CRASH_INPUT_SIZE to 4096.   
+We set TIMEOUT_SEC to 3 to detect infinite loops when we turn the balance.   
+
+
+### 'void child_proc()'
 creats a child process named child_proc() and passes the output of the child process
 to the parent process through a pipe.
 
@@ -12,17 +27,17 @@ to the parent process through a pipe.
 
 
 
-## 'parent_proc()' 
+### 'int parent_proc()' 
 that is used to read the output of a child process.
 It also sets a timeout value and terminates the child process if it exceeds the timeout.
 
-'buf' : a character array with a size of 128.
-'s' : a signed integer of type 'ssize_t'.
-'tv' : a struct of type 'timeval'.
-'readfds' : a set of file descriptors for reading.
-'ret' : a signed integer of type 'int'.
-'exit_code' : an integer that stores the exit status of the child process.
-'pipes' : an array of two integers used for communication between parent and child process.
+'buf' : a character array with a size of 128.   
+'s' : a signed integer of type 'ssize_t'.   
+'tv' : a struct of type 'timeval'.   
+'readfds' : a set of file descriptors for reading.   
+'ret' : a signed integer of type 'int'.   
+'exit_code' : an integer that stores the exit status of the    child process.
+'pipes' : an array of two integers used for communication    between parent and child process.   
 'child_pid' : a process identifier of the child process.
 
 1. Close the write end of the pipe.
@@ -38,7 +53,7 @@ It also sets a timeout value and terminates the child process if it exceeds the 
 
 
 
-## 'ProgramExecution(char * testInput)'
+### 'int ProgramExecution(char * testInput)'
 exetues an external program with a specified input and returns the result.
 
 1. A pipe is created using the pipe() system call to enable communication between the parent and child processes. The pipes array is used to store the file descriptors for the pipe.
@@ -51,7 +66,7 @@ exetues an external program with a specified input and returns the result.
 
 
 
-## 'reduce()'
+### 'char * reduce()'
 takes a string as an argument, cuts out parts of the string to check the result of program execution, and if the program execution result does not satisfy a certain condition, it reassembles the string and repeats the process of checking the program execution result until it finds a satisfying string to return.
 
 1. Save the length of the input string t in s.
@@ -65,12 +80,12 @@ takes a string as an argument, cuts out parts of the string to check the result 
 
 
 
-## 'minimize(char * t)'
+### 'char * minimize(char * t)'
 minimizes the given string by calling the reduce() function internally and returns the result of reduce() as its own return value.
 
 
 
-## 'create_reduced(char * t)'
+### 'void create_reduced(char * t)'
 
 1. Receives a string t as an argument.
 2. Calls the popen function to execute the external program specified by return_str[6]. It returns a FILE pointer connected to the external program using the "w" option.
@@ -79,7 +94,7 @@ minimizes the given string by calling the reduce() function internally and retur
 5. Calls the pclose function to close the connection between the file pointer and the external program.
 
 
-## 'checkInvaildArgument(int argc, char ** args)'
+### 'int checkInvaildArgument(int argc, char ** args)'
 performs the role of verifying whether all given arguments are valid options. Therefore, it is one of the essential functions to ensure program stability.
 
 1. Receives argc and args array as arguments.
@@ -89,7 +104,7 @@ performs the role of verifying whether all given arguments are valid options. Th
 
 
 
-## 'main()'
+### 'int main()'
 
 1. Receives arguments argc and args as input.
 2. Calls the checkInvaildArgument function to verify if the arguments are valid options. If an invalid option is found, it prints the error message "Invalid Argument" and exits the program.
@@ -104,3 +119,29 @@ performs the role of verifying whether all given arguments are valid options. Th
 11. Uses the minimize function to shorten the buff string and creates a reduced string using the create_reduced function with the shortened string as an argument.
 12. Frees the dynamically allocated memory in the return_str array.
 13. Exits the program.
+
+
+
+## [Makefile](https://github.com/YoRangS/OS_HW2/blob/master/Makefile)
+
+### make all
+
+```
+all: $(TARGET)
+
+$(TARGET): cimin.o
+	$(CC) -o $(TARGET) cimin.o
+
+cimin.o: cimin.c
+	$(CC) $(CFLAGS) cimin.c
+```
+
+First, do 'make all' then create 'cimin.o' and 'cimin'.   
+To execute this code.
+```
+gcc -c cimin.c
+gcc -o cimin cimin.o
+```
+
+### make _reduced
+

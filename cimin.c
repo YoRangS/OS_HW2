@@ -12,7 +12,6 @@
 #define CRASH_INPUT_SIZE 4096
 #define TIMEOUT_SEC 3
 
-
 int pipes[2];
 char ** return_str;
 
@@ -69,6 +68,7 @@ int parent_proc()
 int ProgramExecution(char * testInput) {
         pid_t child_pid ;
         int exit_code ;
+        int result ;
 
         if ((pipe(pipes)) != 0) {
                 perror("Failed to read pipe");
@@ -76,12 +76,13 @@ int ProgramExecution(char * testInput) {
         }
 
         if (child_pid = fork()) {
-                parent_proc();
+                result = parent_proc();
         }
         else {
                 child_proc();
         }
         wait(&exit_code);
+        return result;
 }
 
 char *
