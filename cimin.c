@@ -26,14 +26,19 @@ child_proc(char* testInput)
                 argument[i] = (char*)malloc(strlen(return_str[i]) + 1);
                 strcpy(argument[i-8], return_str[i]);
         }
-        strcpy(argument[return_argc-8], "<");
-        strcpy(argument[return_argc-7], testInput);
 
-        printf("argument:\n");
-        for (int i = 0; i < return_argc-8+2; i++) {
-                printf("%s\n", argument[i]);
+        FILE* file = fopen("testInput", "w");
+        if (file == NULL) {
+                perror("Failed to write");
+                exit(0);
         }
-        printf("\n");
+        fprintf(file, "%s", testInput);
+        fclose(file);
+
+        argu[return_argc-8] = (char*)malloc(strlen("<") + 1);
+        strcpy(argument[return_argc-8], "<");
+        argu[return_argc-7] = (char*)malloc(strlen("./testInput") + 1);
+        strcpy(argument[return_argc-7], "./testInput");
 
         execv(return_str[7], argument) ;
 }
