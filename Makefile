@@ -19,7 +19,7 @@ cimin.o: cimin.c
 balance_reduced: $(TARGET)
 	cd $(FILEPATH)/balance && ./build.sh
 	chmod +x $(FILEPATH)$(CRASH_INPUT)
-	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o balance_reduced $(EXE) $(ARGU)
+	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o b_reduced $(EXE) $(ARGU)
 
 jsmn_reduced: $(TARGET)
 	cd $(FILEPATH)/jsmn && ./bulid.sh
@@ -27,7 +27,7 @@ jsmn_reduced: $(TARGET)
 	CRASH_INPUT:=jsmn/testcases/crash.json
 	DET_STRING:="heap-buffer-overflow"
 	EXE:=jsondump
-	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o jsmn_reduced $(EXE) $(ARGU)
+	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o j_reduced $(EXE) $(ARGU)
 
 libxml2_reduced: $(TARGET)
 	cd $(FILEPATH)/jsmn && ./bulid.sh
@@ -36,7 +36,7 @@ libxml2_reduced: $(TARGET)
 	DET_STRING:="SEGV on unknown address"
 	EXE:=xmllint
 	ARGU:="--recover --postvalid - < testcases/crash.xml"
-	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o libxml2_reduced $(EXE) $(ARGU)
+	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o lx_reduced $(EXE) $(ARGU)
 
 clean:
 	rm -rf $(OBJS) $(TARGET) *.o
