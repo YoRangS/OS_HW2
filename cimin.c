@@ -131,14 +131,14 @@ char* minimize(char * t) {
 }
 
 void create_reduced(char* t){
-        FILE* file = popen(return_str[6], "w");
+        FILE* file = fopen(return_str[6], "w");
         if (file == NULL) {
                 perror("Failed to write");
                 exit(0);
         }
 
         fprintf(file, "%s", t);
-        pclose(file);
+        fclose(file);
 }
 
 int checkInvaildArgument(int argc, char ** args) {
