@@ -22,7 +22,7 @@ balance_reduced: $(TARGET)
 	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o b_reduced $(EXE) $(ARGU)
 
 jsmn_reduced: $(TARGET)
-	cd $(FILEPATH)jsmn && ./bulid.sh
+	cd $(FILEPATH)jsmn && ./build.sh
 	chmod +x $(FILEPATH)$(CRASH_INPUT)
 	CRASH_INPUT:=jsmn/testcases/crash.json
 	DET_STRING:="heap-buffer-overflow"
@@ -30,7 +30,7 @@ jsmn_reduced: $(TARGET)
 	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o j_reduced $(EXE) $(ARGU)
 
 libxml2_reduced: $(TARGET)
-	cd $(FILEPATH)jsmn && ./bulid.sh
+	cd $(FILEPATH)jsmn && ./build.sh
 	chmod +x $(FILEPATH)$(CRASH_INPUT)
 	CRASH_INPUT:=libxml2/testcases/crash.xml
 	DET_STRING:="SEGV on unknown address"
