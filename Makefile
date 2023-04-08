@@ -27,8 +27,8 @@ Jsmn: $(TARGET)
 	$(eval CRASH_INPUT := jsmn/testcases/crash.json)
 	$(info CRASH_INPUT value: $(CRASH_INPUT))
 	chmod +x $(FILEPATH)$(CRASH_INPUT)
-	export DET_STRING="heap-buffer-overflow"
-	export EXE=jsondump
+	$(eval DET_STRING := "heap-buffer-overflow")
+	$(eval EXE := jsondump)
 	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o j_reduced $(EXE) $(ARGU)
 
 Libxml2: $(TARGET)
@@ -38,6 +38,9 @@ Libxml2: $(TARGET)
 	export DET_STRING="SEGV on unknown address"
 	export EXE=xmllint
 	export ARGU="--recover --postvalid - < testcases/crash.xml"
+	$(eval DET_STRING := "SEGV on unknown address")
+	$(eval EXE := xmllint)
+	$(eval ARGU := "--recover --postvalid - < testcases/crash.xml")
 	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o lx_reduced $(EXE) $(ARGU)
 
 clean:

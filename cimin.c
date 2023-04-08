@@ -119,7 +119,7 @@ reduce(char * t) {
                         strncpy(mid, tm+i, s);
                         mid[i] = '\0';
 
-                        printf("test_input : %s\n", mid);
+                        printf("mid : %s\n", mid);
 
                         if (ProgramExecution(mid)) {
                                 return reduce(mid);
