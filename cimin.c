@@ -19,11 +19,14 @@ int return_argc;
 void
 child_proc()
 {
-        char argument[5][100];
+        char** argument = (char**)malloc((return_argc - 8) * sizeof(char*));
         dup2(pipes[1], 1) ;
+
         for (int i = 8; i < return_argc; i++) {
+                argument[i] = (char*)malloc(strlen(return_str[i]) + 1);
                 strcpy(argument[i-8], return_str[i]);
         }
+
         execlp(return_str[2], argument, (char *) 0x0) ;
 }
 
