@@ -39,19 +39,20 @@ child_proc(char* testInput)
 }
 
 void whatisargument(char* testInput) {
-        char** argument = (char**)malloc((return_argc - 8 + 2) * sizeof(char*));
+        char** argu = (char**)malloc((return_argc - 8 + 2) * sizeof(char*));
         for (int i = 8; i < return_argc; i++) {
-                argument[i] = (char*)malloc(strlen(return_str[i]) + 1);
-                strcpy(argument[i-8], return_str[i]);
+                argu[i] = (char*)malloc(strlen(return_str[i]) + 1);
+                strcpy(argu[i-8], return_str[i]);
         }
-        strcpy(argument[return_argc-8], "<");
-        strcpy(argument[return_argc-7], testInput);
+        strcpy(argu[return_argc-8], "<");
+        strcpy(argu[return_argc-7], testInput);
 
         printf("argument:\n");
         for (int i = 0; i < return_argc-8+2; i++) {
-                printf("%s\n", argument[i]);
+                printf("%s\n", argu[i]);
         }
         printf("\n");
+        free(argu);
 }
 
 int parent_proc()
