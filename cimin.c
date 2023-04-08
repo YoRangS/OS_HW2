@@ -51,6 +51,7 @@ int parent_proc()
 
         // Set timeout to use select function
         int ret = select(pipes[0] + 1, &readfds, NULL, NULL, &tv);
+        printf("")
         if (ret == -1) {
             perror("select() failed");
             exit(1);
@@ -65,6 +66,7 @@ int parent_proc()
             } else {
                     buf[s+1] = 0x0 ;
             }
+            printf("buf : %s\n", buf);
             return strstr(return_str[4], buf) != NULL;
         }
 }
@@ -73,6 +75,8 @@ int ProgramExecution(char * testInput) {
         pid_t child_pid ;
         int exit_code ;
         int result ;
+
+        printf("ProgramExecution: %s\n", testInput);
 
         if ((pipe(pipes)) != 0) {
                 perror("Failed to read pipe");
@@ -86,6 +90,7 @@ int ProgramExecution(char * testInput) {
                 child_proc();
         }
         wait(&exit_code);
+        printf("result : %d\n", result);
         return result;
 }
 

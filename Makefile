@@ -35,9 +35,6 @@ Libxml2: $(TARGET)
 	cd $(FILEPATH)libxml2 && ./build.sh
 	$(eval CRASH_INPUT := libxml2/testcases/crash.xml)
 	chmod +x $(FILEPATH)$(CRASH_INPUT)
-	export DET_STRING="SEGV on unknown address"
-	export EXE=xmllint
-	export ARGU="--recover --postvalid - < testcases/crash.xml"
 	$(eval DET_STRING := "SEGV on unknown address")
 	$(eval EXE := xmllint)
 	$(eval ARGU := "--recover --postvalid - < testcases/crash.xml")
