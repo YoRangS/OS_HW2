@@ -107,6 +107,8 @@ reduce(char * t) {
                         char * test_input = (char*) malloc(len + 1);
                         snprintf(test_input, len+1, "%s%s", head, tail);
 
+                        printf("test_input : %s\n", test_input);
+
                         if (ProgramExecution(test_input)) {
                                 return reduce(test_input);
                         }
@@ -116,6 +118,8 @@ reduce(char * t) {
                         char * mid = (char*)malloc((i+1)*sizeof(char));
                         strncpy(mid, tm+i, s);
                         mid[i] = '\0';
+
+                        printf("test_input : %s\n", mid);
 
                         if (ProgramExecution(mid)) {
                                 return reduce(mid);
@@ -172,9 +176,9 @@ main(int argc, char ** args)
                 strcpy(return_str[i], args[i]);
         }
         
-        for (int i = 0; i < argc; i++) {
-                printf("(%d) %s\n", i, return_str[i]);
-        }
+        // for (int i = 0; i < argc; i++) {
+        //         printf("(%d) %s\n", i, return_str[i]);
+        // }
 
         char buff[CRASH_INPUT_SIZE];
         FILE *fp;
@@ -186,6 +190,8 @@ main(int argc, char ** args)
         fgets(buff, CRASH_INPUT_SIZE, fp);
 
         pclose(fp);
+
+        printf("buff : %s", buff);
 
         create_reduced(minimize(buff));
 
