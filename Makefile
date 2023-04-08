@@ -16,23 +16,23 @@ $(TARGET): cimin.o
 cimin.o: cimin.c
 	$(CC) $(CFLAGS) cimin.c
 
-balance_reduced: $(TARGET)
+Balance: $(TARGET)
 	cd $(FILEPATH)balance && ./build.sh
 	chmod +x $(FILEPATH)$(CRASH_INPUT)
 	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o b_reduced $(EXE) $(ARGU)
 
-jsmn_reduced: $(TARGET)
+Jsmn: $(TARGET)
 	cd $(FILEPATH)jsmn && ./build.sh
+	export CRASH_INPUT=jsmn/testcases/crash.json
 	chmod +x $(FILEPATH)$(CRASH_INPUT)
-	CRASH_INPUT:=jsmn/testcases/crash.json
 	DET_STRING:="heap-buffer-overflow"
 	EXE:=jsondump
 	./$(TARGET) -i $(FILEPATH)$(CRASH_INPUT) -m $(DET_STRING) -o j_reduced $(EXE) $(ARGU)
 
-libxml2_reduced: $(TARGET)
+Libxml2: $(TARGET)
 	cd $(FILEPATH)jsmn && ./build.sh
+	export CRASH_INPUT=libxml2/testcases/crash.xml
 	chmod +x $(FILEPATH)$(CRASH_INPUT)
-	CRASH_INPUT:=libxml2/testcases/crash.xml
 	DET_STRING:="SEGV on unknown address"
 	EXE:=xmllint
 	ARGU:="--recover --postvalid - < testcases/crash.xml"
