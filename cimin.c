@@ -35,9 +35,9 @@ child_proc(char* testInput)
         fprintf(file, "%s", testInput);
         fclose(file);
 
-        argu[return_argc-8] = (char*)malloc(strlen("<") + 1);
+        argument[return_argc-8] = (char*)malloc(strlen("<") + 1);
         strcpy(argument[return_argc-8], "<");
-        argu[return_argc-7] = (char*)malloc(strlen("./testInput") + 1);
+        argument[return_argc-7] = (char*)malloc(strlen("./testInput") + 1);
         strcpy(argument[return_argc-7], "./testInput");
 
         execv(return_str[7], argument) ;
