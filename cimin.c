@@ -40,8 +40,9 @@ child_proc(char* testInput)
 
 void whatisargument(char* testInput) {
         char** argu = (char**)malloc((return_argc - 8 + 2) * sizeof(char*));
+        printf("return_argc: %d\n", return_argc);
         for (int i = 8; i < return_argc; i++) {
-                argu[i] = (char*)malloc(strlen(return_str[i]) + 1);
+                argu[i-8] = (char*)malloc(strlen(return_str[i]) + 1);
                 strcpy(argu[i-8], return_str[i]);
         }
         strcpy(argu[return_argc-8], "<");
